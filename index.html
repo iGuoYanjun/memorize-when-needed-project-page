@@ -22,6 +22,14 @@
       margin-bottom: 5px;
     }
 
+    .publication-links {
+      margin-top: 0.85rem;
+    }
+
+    .publication-links img {
+      height: 26px;
+    }
+
     .teaser .hero-body {
       padding-top: 0;
       padding-bottom: 3rem;
@@ -477,6 +485,28 @@
               <span><sup>*</sup>Equal contribution.</span>
               <span><sup>†</sup>Corresponding author.</span>
             </div>
+            <div class="publication-links">
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2604.18215" target="_blank" rel="noopener">
+                  <img src="https://img.shields.io/badge/arXiv-2604.18215-b31b1b.svg" alt="arXiv 2604.18215">
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://github.com/iGuoYanjun/Memorize-When-Needed" target="_blank" rel="noopener">
+                  <img src="https://img.shields.io/badge/GitHub-%23121011.svg?logo=github&amp;logoColor=white" alt="GitHub repository">
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://huggingface.co/Guoyanjun/MemorizeWhenNeed" target="_blank" rel="noopener">
+                  <img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-MemorizeWhenNeed-blue" alt="Hugging Face model page">
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://www.youtube.com/watch?v=oOJBvzUUw_U" target="_blank" rel="noopener">
+                  <img src="https://img.shields.io/badge/%F0%9F%8E%A5%20Demo-Video-6A5ACD" alt="Demo video">
+                </a>
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -695,7 +725,7 @@
                         <source src="static/results/03_comparison_realestate10k_indoor/bottom_left_WORLDplay.mp4" type="video/mp4">
                       </video>
                     </div>
-                    <p class="qual-results__method-name has-text-centered">Worldplay</p>
+                    <p class="qual-results__method-name has-text-centered">WorldPlay</p>
                   </div>
 
                   <div class="qual-results__comparison-item is-ours">
@@ -738,7 +768,7 @@
                         <source src="static/results/04_comparison_realestate10k_outdoor/bottom_left_WORLDplay.mp4" type="video/mp4">
                       </video>
                     </div>
-                    <p class="qual-results__method-name has-text-centered">Worldplay</p>
+                    <p class="qual-results__method-name has-text-centered">WorldPlay</p>
                   </div>
 
                   <div class="qual-results__comparison-item is-ours">
@@ -781,7 +811,7 @@
                         <source src="static/results/05_comparison_ood_scene/bottom_left_WORLDplay.mp4" type="video/mp4">
                       </video>
                     </div>
-                    <p class="qual-results__method-name has-text-centered">Worldplay</p>
+                    <p class="qual-results__method-name has-text-centered">WorldPlay</p>
                   </div>
 
                   <div class="qual-results__comparison-item is-ours">
@@ -803,31 +833,27 @@
 
   <section class="section">
     <div class="container is-max-desktop">
-      <div class="columns is-centered">
-        <div class="column is-four-fifths">
-          <h2 class="title is-3">BibTeX</h2>
-          <div class="content citation-block">
-            <pre><code>@article{guo2026memorize,
+      <h2 class="title is-3">BibTeX</h2>
+      <div class="content citation-block">
+        <pre><code>@article{guo2026memorize,
   title={Memorize When Needed: Decoupled Memory Control for Spatially Consistent Long-Horizon Video Generation},
   author={Guo, Yanjun and Zhang, Zhengqiang and Wang, Pengfei and Liang, Xinyue and Ma, Zhiyuan and Zhang, Lei},
   journal={arXiv preprint arXiv:2604.18215},
   year={2026}
 }</code></pre>
-          </div>
-        </div>
       </div>
-    </div>
-  </section>
-
-  <section class="section hero is-light">
-    <div class="container is-max-desktop">
-      <div class="columns is-centered">
-        <div class="column is-four-fifths">
-          <h2 class="title is-3">Contact</h2>
-          <div class="content">
-            <p>Please send emails to <a href="mailto:yanjunn.guo@connect.polyu.hk">yanjunn.guo@connect.polyu.hk</a> if there is any question.</p>
-          </div>
-        </div>
+      <h2 class="title is-3">Acknowledgements</h2>
+      <div class="content citation-block">
+        <pre>If you are interested in our work, please also check out the following related works. We would like to thank the contributors to:
+<a href="https://github.com/Wan-Video/Wan2.1" target="_blank" rel="noopener">Wan</a>: Open and Advanced Large-Scale Video Generative Models
+<a href="https://github.com/snap-research/ac3d" target="_blank" rel="noopener">AC3D</a>: Analyzing and Improving 3D Camera Control in Video Diffusion Transformers
+<a href="https://github.com/xizaoqu/WorldMem" target="_blank" rel="noopener">WorldMem</a>: Long-term Consistent World Simulation with Memory
+<a href="https://github.com/Tencent-Hunyuan/HY-WorldPlay" target="_blank" rel="noopener">WorldPlay</a>: Towards Long-Term Geometric Consistency for Real-Time Interactive World Modeling
+<a href="https://v-mem.github.io/" target="_blank" rel="noopener">VMem</a>: Consistent Interactive Video Scene Generation with Surfel-Indexed View Memory
+<a href="https://stable-virtual-camera.github.io/" target="_blank" rel="noopener">SeVA</a>: Stable Virtual Camera: Generative View Synthesis with Diffusion Models
+<a href="https://github.com/kwsong0113/diffusion-forcing-transformer" target="_blank" rel="noopener">DFoT</a>: History-Guided Video Diffusion
+<a href="https://github.com/zai-org/CogVideo" target="_blank" rel="noopener">CogVideoX</a>: Text-to-Video Diffusion Models with An Expert Transformer
+<a href="https://github.com/aigc-apps/VideoX-Fun" target="_blank" rel="noopener">VideoX-Fun</a> https://github.com/aigc-apps/VideoX-Fun</pre>
       </div>
     </div>
   </section>
@@ -837,10 +863,8 @@
       <div class="columns is-centered">
         <div class="column is-8">
           <div class="content">
-            <p>
-              This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a> which was adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
-              This website is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
-            </p>
+            <p>Contact: Please send emails to <a href="mailto:yanjunn.guo@connect.polyu.hk">yanjunn.guo@connect.polyu.hk</a> if there is any question.</p>
+            <p>This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a> which was adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page. This website is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative Commons Attribution-ShareAlike 4.0 International License</a>.</p>
           </div>
         </div>
       </div>
