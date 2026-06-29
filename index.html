@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Memorize When Needed: Decoupled Memory Control for Spatially Consistent Long-Horizon Video Generation</title>
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-carousel@4.0.24/dist/css/bulma-carousel.min.css">
+  <style>
+    body {
+      font-family: "Noto Sans", sans-serif;
+    }
+
+    .footer .icon-link {
+      font-size: 25px;
+      color: #000;
+    }
+
+    .link-block a {
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+
+    .teaser .hero-body {
+      padding-top: 0;
+      padding-bottom: 3rem;
+    }
+
+    body > section.hero:first-of-type .hero-body {
+      padding-bottom: 1.5rem;
+    }
+
+    .teaser {
+      font-family: "Google Sans", sans-serif;
+    }
+
+    .publication-title,
+    .publication-authors {
+      font-family: "Google Sans", sans-serif;
+    }
+
+    .publication-authors a {
+      color: hsl(204, 86%, 53%) !important;
+    }
+
+    .publication-authors a:hover {
+      text-decoration: underline;
+    }
+
+    .publication-affiliations,
+    .publication-footnotes {
+      font-family: "Google Sans", sans-serif;
+      color: #4a4a4a;
+    }
+
+    .author-block {
+      display: inline-block;
+    }
+
+    .results-carousel {
+      overflow: hidden;
+    }
+
+    .results-carousel .item {
+      margin: 5px;
+      overflow: hidden;
+      padding: 20px;
+      font-size: 0;
+    }
+
+    .results-carousel video {
+      margin: 0;
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      background: #edf1f7;
+    }
+
+    .slider-pagination .slider-page {
+      background: #000000;
+    }
+
+    .eql-cntrb {
+      font-size: smaller;
+    }
+
+    .project-meta {
+      color: #555;
+    }
+
+    .citation-block pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .teaser-figure {
+      width: 100%;
+      height: auto;
+    }
+
+    .results-carousel .subtitle {
+      margin-top: 0.85rem;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    .qual-results {
+      background: #fff;
+    }
+
+    .demo-video-section {
+      background: #fff;
+    }
+
+    .demo-video-frame {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+    }
+
+    .demo-video-frame video {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: #000;
+    }
+
+    .qual-results__stack {
+      display: grid;
+      gap: 3rem;
+    }
+
+    .qual-results__block {
+      display: grid;
+      gap: 1.25rem;
+    }
+
+    .qual-results__block-header {
+      display: grid;
+      gap: 0.35rem;
+    }
+
+    .qual-results__block-note {
+      margin: 0;
+      color: #5b6472;
+      line-height: 1.6;
+    }
+
+    .qual-results__ood-grid,
+    .qual-results__gallery-grid,
+    .qual-results__comparison-grid {
+      display: grid;
+      gap: 1.25rem;
+    }
+
+    .qual-results__ood-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .qual-results__gallery-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.55rem;
+    }
+
+    [data-gallery-slider] .qual-results__gallery-slider {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    [data-gallery-slider] .qual-results__gallery-viewport {
+      min-width: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      scroll-behavior: smooth;
+    }
+
+    [data-gallery-slider] .qual-results__gallery-viewport::-webkit-scrollbar {
+      display: none;
+    }
+
+    [data-gallery-slider] .qual-results__gallery-grid {
+      grid-template-columns: none;
+      grid-auto-flow: column;
+      grid-auto-columns: calc((100% - (2 * 0.55rem)) / 3);
+    }
+
+    .qual-results__gallery-nav {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.75rem;
+      height: 2.75rem;
+      padding: 0;
+      border: 1px solid rgba(230, 233, 239, 0.95);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.78);
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+      color: #445063;
+      font-size: 1.5rem;
+      line-height: 1;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    .qual-results__gallery-nav:hover {
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.16);
+      transform: translateY(-1px);
+    }
+
+    .qual-results__gallery-nav:focus-visible {
+      outline: 2px solid rgba(50, 115, 220, 0.35);
+      outline-offset: 2px;
+    }
+
+    .qual-results__gallery-nav.is-disabled {
+      opacity: 0.5;
+      cursor: default;
+      transform: none;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+    }
+
+    .qual-results__comparison-stack {
+      display: grid;
+      gap: 2rem;
+    }
+
+    .qual-results__comparison-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.55rem;
+    }
+
+    .qual-results__subsection {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .qual-results__subsection--gallery {
+      gap: 0.5rem;
+    }
+
+    .qual-results__subsection--gallery .title.is-5 {
+      margin-bottom: 0;
+    }
+
+    .qual-results__subsection--comparison {
+      gap: 0.5rem;
+    }
+
+    .qual-results__subsection--comparison .title.is-5 {
+      margin-bottom: 0;
+    }
+
+    .qual-results__card {
+      background: #fff;
+      border: 1px solid #e6e9ef;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+      padding: 1rem;
+    }
+
+    .qual-results__card.is-ours {
+      border-color: hsl(204, 86%, 53%);
+      box-shadow: 0 14px 36px rgba(50, 115, 220, 0.14);
+    }
+
+    .qual-results__gallery-card {
+      padding: 0.65rem;
+      overflow: hidden;
+    }
+
+    .qual-results__gallery-card .qual-results__video-shell {
+      border-radius: 0;
+    }
+
+    .qual-results__gallery-card .qual-results__video-shell video {
+      border-radius: 0;
+    }
+
+    .qual-results__comparison-card {
+      padding: 0.9rem;
+      overflow: hidden;
+    }
+
+    .qual-results__comparison-card .qual-results__video-shell {
+      border-radius: 0;
+    }
+
+    .qual-results__comparison-card .qual-results__video-shell video {
+      border-radius: 0;
+    }
+
+    .qual-results__comparison-item {
+      display: grid;
+      gap: 0.55rem;
+    }
+
+    .qual-results__comparison-title {
+      margin: 0 0 0.8rem;
+      font-family: "Google Sans", sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1f2937;
+      text-align: center;
+    }
+
+    .qual-results__comparison-title--left {
+      text-align: left;
+    }
+
+    .qual-results__comparison-item.is-ours .qual-results__method-name {
+      color: hsl(204, 86%, 53%);
+      font-weight: 700;
+    }
+
+    .qual-results__comparison-item.is-ours .qual-results__video-shell {
+      border-width: 2px;
+      border-color: hsl(204, 86%, 53%);
+      box-shadow: inset 0 0 0 2px rgba(50, 115, 220, 0.24);
+    }
+
+    .qual-results__video-shell {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      border-radius: 12px;
+      border: 1px solid #e9edf3;
+      background: #edf1f7;
+    }
+
+    .qual-results__video-shell video {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: #edf1f7;
+    }
+
+    .qual-results__card-title,
+    .qual-results__method-name {
+      margin: 0;
+      font-family: "Google Sans", sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    .qual-results__card-title {
+      margin-top: 0.85rem;
+    }
+
+    .qual-results__caption {
+      margin: 0.85rem 0 0;
+      font-size: 0.95rem;
+      color: #5b6472;
+      text-align: center;
+    }
+
+    .qual-results__prompt-box {
+      margin-top: 0.85rem;
+      padding: 0.9rem 1rem;
+      border-radius: 12px;
+      background: #f7f8fa;
+      border-left: 3px solid rgba(50, 115, 220, 0.45);
+      font-size: 0.92rem;
+      color: #4a5568;
+      line-height: 1.65;
+      min-height: 7.5rem;
+    }
+
+    .qual-results__method-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .qual-results__method-badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      background: rgba(50, 115, 220, 0.12);
+      color: hsl(204, 86%, 53%);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      padding: 0.25rem 0.65rem;
+      text-transform: uppercase;
+    }
+
+    @media screen and (max-width: 768px) {
+      .results-carousel .item {
+        padding: 10px;
+      }
+
+      .qual-results__ood-grid,
+      .qual-results__gallery-grid,
+      .qual-results__comparison-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .qual-results__prompt-box {
+        min-height: 0;
+      }
+
+      .qual-results__gallery-card {
+        padding: 0.75rem;
+      }
+
+      [data-gallery-slider] .qual-results__gallery-slider {
+        gap: 0.55rem;
+      }
+
+      [data-gallery-slider] .qual-results__gallery-grid {
+        grid-template-columns: none;
+        grid-auto-columns: 100%;
+      }
+
+      .qual-results__gallery-nav {
+        width: 2.4rem;
+        height: 2.4rem;
+        font-size: 1.3rem;
+      }
+    }
+
+    @media screen and (max-width: 1023px) and (min-width: 769px) {
+      .qual-results__gallery-grid,
+      .qual-results__comparison-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      [data-gallery-slider] .qual-results__gallery-grid {
+        grid-template-columns: none;
+        grid-auto-columns: calc((100% - 0.55rem) / 2);
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">Memorize When Needed:<br>Decoupled Memory Control for Spatially Consistent Long-Horizon Video Generation</h1>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">
+                <a href="https://scholar.google.com/citations?hl=zh-CN&user=j1ypDt8AAAAJ" target="_blank">Yanjun Guo</a><sup>1,2,*</sup>
+              </span>
+              <span class="author-block">
+                <a href="https://scholar.google.com/citations?user=UX26wSMAAAAJ&hl=en" target="_blank">Zhengqiang Zhang</a><sup>1,2,*</sup>
+              </span>
+              <span class="author-block">
+                <a href="https://scholar.google.com/citations?user=zAAYwRYAAAAJ&hl=en" target="_blank">Pengfei Wang</a><sup>1,*</sup>
+              </span>
+              <span class="author-block">
+                <a href="https://scholar.google.com/citations?user=R9PlnKgAAAAJ&hl=zh-CN" target="_blank">Xinyue Liang</a><sup>1</sup>
+              </span>
+              <span class="author-block">
+                <a href="https://scholar.google.com/citations?user=F15mLDYAAAAJ&hl=en" target="_blank">Zhiyuan Ma</a><sup>1</sup>
+              </span>
+              <span class="author-block">
+                <a href="https://scholar.google.com/citations?user=tAK5l1IAAAAJ&hl=en" target="_blank">Lei Zhang</a><sup>1,2,†</sup>
+              </span>
+            </div>
+            <div class="is-size-5 publication-affiliations">
+              <span><sup>1</sup>The Hong Kong Polytechnic University</span><br>
+              <span><sup>2</sup>OPPO Research Institute</span>
+            </div>
+            <div class="is-size-6 publication-footnotes">
+              <span><sup>*</sup>Equal contribution.</span>
+              <span><sup>†</sup>Corresponding author.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero teaser">
+    <div class="container is-max-desktop">
+      <div class="hero-body">
+        <img class="teaser-figure" src="static/images/teaser.png" alt="Method overview teaser figure">
+      </div>
+    </div>
+  </section>
+
+  <section class="section hero is-light">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              Spatially consistent long-horizon video generation aims to maintain temporal and spatial consistency along predefined camera trajectories. Existing methods mostly entangle memory modeling with video generation, leading to inconsistent content during scene revisits and diminished generative capacity when exploring novel regions, even when trained on extensive annotated data. To address these limitations, we propose a decoupled framework that separates memory conditioning from generation. Our approach significantly reduces training costs while simultaneously enhancing spatial consistency and preserving the generative capacity for novel scene exploration. Specifically, we employ a lightweight, independent memory branch to learn precise spatial consistency from historical observation. We first introduce a hybrid memory representation to capture complementary temporal and spatial cues from generated frames, then leverage a per-frame cross-attention mechanism to ensure each frame is conditioned exclusively on the most spatially relevant historical information, which is injected into the generative model to ensure spatial consistency. When generating new scenes, a camera-aware gating mechanism is proposed to mediate the interaction between memory and generation modules, enabling memory conditioning only when meaningful historical references exist. Compared with the existing method, our method is highly data-efficient, yet the experiments demonstrate that our approach achieves state-of-the-art performance in terms of both visual quality and spatial consistency.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section demo-video-section">
+    <div class="container is-max-desktop">
+      <div class="demo-video-frame">
+        <video controls muted loop playsinline preload="metadata">
+          <source src="static/videos/demo-nips.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+  </section>
+
+  <section class="section qual-results">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Experimental Results</h2>
+
+      <div class="qual-results__stack">
+        <div class="qual-results__block">
+          <div class="qual-results__ood-grid">
+            <div class="qual-results__card" data-prompt-filename="01.mp4">
+              <div class="qual-results__video-shell">
+                <video controls muted loop playsinline preload="metadata">
+                  <source src="static/results/01_ood_results_with_prompt/01.mp4" type="video/mp4">
+                </video>
+              </div>
+              <div class="qual-results__prompt-box" data-prompt-text>Loading prompt...</div>
+            </div>
+
+            <div class="qual-results__card" data-prompt-filename="02.mp4">
+              <div class="qual-results__video-shell">
+                <video controls muted loop playsinline preload="metadata">
+                  <source src="static/results/01_ood_results_with_prompt/02.mp4" type="video/mp4">
+                </video>
+              </div>
+              <div class="qual-results__prompt-box" data-prompt-text>Loading prompt...</div>
+            </div>
+
+            <div class="qual-results__card" data-prompt-filename="03.mp4">
+              <div class="qual-results__video-shell">
+                <video controls muted loop playsinline preload="metadata">
+                  <source src="static/results/01_ood_results_with_prompt/03.mp4" type="video/mp4">
+                </video>
+              </div>
+              <div class="qual-results__prompt-box" data-prompt-text>Loading prompt...</div>
+            </div>
+
+            <div class="qual-results__card" data-prompt-filename="04.mp4">
+              <div class="qual-results__video-shell">
+                <video controls muted loop playsinline preload="metadata">
+                  <source src="static/results/01_ood_results_with_prompt/04.mp4" type="video/mp4">
+                </video>
+              </div>
+              <div class="qual-results__prompt-box" data-prompt-text>Loading prompt...</div>
+            </div>
+
+            <div class="qual-results__card" data-prompt-filename="05.mp4">
+              <div class="qual-results__video-shell">
+                <video controls muted loop playsinline preload="metadata">
+                  <source src="static/results/01_ood_results_with_prompt/05.mp4" type="video/mp4">
+                </video>
+              </div>
+              <div class="qual-results__prompt-box" data-prompt-text>Loading prompt...</div>
+            </div>
+
+            <div class="qual-results__card" data-prompt-filename="06.mp4">
+              <div class="qual-results__video-shell">
+                <video controls muted loop playsinline preload="metadata">
+                  <source src="static/results/01_ood_results_with_prompt/06.mp4" type="video/mp4">
+                </video>
+              </div>
+              <div class="qual-results__prompt-box" data-prompt-text>Loading prompt...</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="qual-results__block">
+          <div class="qual-results__block-header">
+            <h2 class="title is-3 has-text-centered">Results Gallery</h2>
+          </div>
+
+          <div class="qual-results__subsection qual-results__subsection--gallery">
+            <h4 class="title is-5">🏠 RealEstate10K Results</h4>
+            <div class="qual-results__card qual-results__gallery-card" data-gallery-slider>
+              <div class="qual-results__gallery-slider">
+                <div class="qual-results__gallery-viewport" data-gallery-viewport>
+                  <div class="qual-results__gallery-grid">
+                    <div class="qual-results__video-shell">
+                      <video controls muted loop playsinline preload="metadata">
+                        <source src="static/results/02_results_gallery/RealEstate10K_01.mp4" type="video/mp4">
+                      </video>
+                    </div>
+
+                    <div class="qual-results__video-shell">
+                      <video controls muted loop playsinline preload="metadata">
+                        <source src="static/results/02_results_gallery/RealEstate10K_02.mp4" type="video/mp4">
+                      </video>
+                    </div>
+
+                    <div class="qual-results__video-shell">
+                      <video controls muted loop playsinline preload="metadata">
+                        <source src="static/results/02_results_gallery/RealEstate10K_03.mp4" type="video/mp4">
+                      </video>
+                    </div>
+
+                    <div class="qual-results__video-shell">
+                      <video controls muted loop playsinline preload="metadata">
+                        <source src="static/results/02_results_gallery/RealEstate10K_04.mp4" type="video/mp4">
+                      </video>
+                    </div>
+                  </div>
+                </div>
+                <button class="qual-results__gallery-nav" type="button" data-gallery-toggle aria-label="Show next result">
+                  <span data-gallery-arrow aria-hidden="true">›</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="qual-results__subsection qual-results__subsection--gallery">
+            <h4 class="title is-5">🌍 OOD Scene Results</h4>
+            <div class="qual-results__card qual-results__gallery-card" data-gallery-slider>
+              <div class="qual-results__gallery-slider">
+                <div class="qual-results__gallery-viewport" data-gallery-viewport>
+                  <div class="qual-results__gallery-grid">
+                    <div class="qual-results__video-shell">
+                      <video controls muted loop playsinline preload="metadata">
+                        <source src="static/results/02_results_gallery/ood-scene_01.mp4" type="video/mp4">
+                      </video>
+                    </div>
+
+                    <div class="qual-results__video-shell">
+                      <video controls muted loop playsinline preload="metadata">
+                        <source src="static/results/02_results_gallery/ood-scene_02.mp4" type="video/mp4">
+                      </video>
+                    </div>
+
+                    <div class="qual-results__video-shell">
+                      <video controls muted loop playsinline preload="metadata">
+                        <source src="static/results/02_results_gallery/ood-scene_03.mp4" type="video/mp4">
+                      </video>
+                    </div>
+
+                    <div class="qual-results__video-shell">
+                      <video controls muted loop playsinline preload="metadata">
+                        <source src="static/results/02_results_gallery/ood-scene_04.mp4" type="video/mp4">
+                      </video>
+                    </div>
+                  </div>
+                </div>
+                <button class="qual-results__gallery-nav" type="button" data-gallery-toggle aria-label="Show next result">
+                  <span data-gallery-arrow aria-hidden="true">›</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="qual-results__block">
+          <div class="qual-results__block-header">
+            <h2 class="title is-3 has-text-centered">Qualitative Comparisons</h2>
+          </div>
+
+          <div class="qual-results__comparison-stack">
+            <div class="qual-results__subsection qual-results__subsection--comparison">
+              <div class="qual-results__card qual-results__comparison-card">
+                <h4 class="qual-results__comparison-title qual-results__comparison-title--left">RealEstate10K Indoor</h4>
+                <div class="qual-results__comparison-grid">
+                  <div class="qual-results__comparison-item">
+                    <div class="qual-results__video-shell">
+                      <video controls muted loop playsinline preload="metadata">
+                        <source src="static/results/03_comparison_realestate10k_indoor/top_left_DFoT.mp4" type="video/mp4">
+                      </video>
+                    </div>
+                    <p class="qual-results__method-name has-text-centered">DFoT</p>
+                  </div>
+
+                  <div class="qual-results__comparison-item">
+                    <div class="qual-results__video-shell">
+                      <video controls muted loop playsinline preload="metadata">
+                        <source src="static/results/03_comparison_realestate10k_indoor/top_right_VMem.mp4" type="video/mp4">
+                      </video>
+                    </div>
+                    <p class="qual-results__method-name has-text-centered">VMem</p>
+                  </div>
+
+                  <div class="qual-results__comparison-item">
+                    <div class="qual-results__video-shell">
+                      <video controls muted loop playsinline preload="metadata">
+                        <source src="static/results/03_comparison_realestate10k_indoor/bottom_left_WORLDplay.mp4" type="video/mp4">
+                      </video>
+                    </div>
+                    <p class="qual-results__method-name has-text-centered">Worldplay</p>
+                  </div>
+
+                  <div class="qual-results__comparison-item is-ours">
+                    <div class="qual-results__video-shell">
+                      <video controls muted loop playsinline preload="metadata">
+                        <source src="static/results/03_comparison_realestate10k_indoor/bottom_right_OURS.mp4" type="video/mp4">
+                      </video>
+                    </div>
+                    <p class="qual-results__method-name has-text-centered">Ours</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="qual-results__subsection qual-results__subsection--comparison">
+              <div class="qual-results__card qual-results__comparison-card">
+                <h4 class="qual-results__comparison-title qual-results__comparison-title--left">RealEstate10K Outdoor</h4>
+                <div class="qual-results__comparison-grid">
+                  <div class="qual-results__comparison-item">
+                    <div class="qual-results__video-shell">
+                      <video controls muted loop playsinline preload="metadata">
+                        <source src="static/results/04_comparison_realestate10k_outdoor/top_left_DFoT.mp4" type="video/mp4">
+                      </video>
+                    </div>
+                    <p class="qual-results__method-name has-text-centered">DFoT</p>
+                  </div>
+
+                  <div class="qual-results__comparison-item">
+                    <div class="qual-results__video-shell">
+                      <video controls muted loop playsinline preload="metadata">
+                        <source src="static/results/04_comparison_realestate10k_outdoor/top_right_VMem.mp4" type="video/mp4">
+                      </video>
+                    </div>
+                    <p class="qual-results__method-name has-text-centered">VMem</p>
+                  </div>
+
+                  <div class="qual-results__comparison-item">
+                    <div class="qual-results__video-shell">
+                      <video controls muted loop playsinline preload="metadata">
+                        <source src="static/results/04_comparison_realestate10k_outdoor/bottom_left_WORLDplay.mp4" type="video/mp4">
+                      </video>
+                    </div>
+                    <p class="qual-results__method-name has-text-centered">Worldplay</p>
+                  </div>
+
+                  <div class="qual-results__comparison-item is-ours">
+                    <div class="qual-results__video-shell">
+                      <video controls muted loop playsinline preload="metadata">
+                        <source src="static/results/04_comparison_realestate10k_outdoor/bottom_right_OURS.mp4" type="video/mp4">
+                      </video>
+                    </div>
+                    <p class="qual-results__method-name has-text-centered">Ours</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="qual-results__subsection qual-results__subsection--comparison">
+              <div class="qual-results__card qual-results__comparison-card">
+                <h4 class="qual-results__comparison-title qual-results__comparison-title--left">OOD Scene</h4>
+                <div class="qual-results__comparison-grid">
+                  <div class="qual-results__comparison-item">
+                    <div class="qual-results__video-shell">
+                      <video controls muted loop playsinline preload="metadata">
+                        <source src="static/results/05_comparison_ood_scene/top_left_DFoT.mp4" type="video/mp4">
+                      </video>
+                    </div>
+                    <p class="qual-results__method-name has-text-centered">DFoT</p>
+                  </div>
+
+                  <div class="qual-results__comparison-item">
+                    <div class="qual-results__video-shell">
+                      <video controls muted loop playsinline preload="metadata">
+                        <source src="static/results/05_comparison_ood_scene/top_right_VMem.mp4" type="video/mp4">
+                      </video>
+                    </div>
+                    <p class="qual-results__method-name has-text-centered">VMem</p>
+                  </div>
+
+                  <div class="qual-results__comparison-item">
+                    <div class="qual-results__video-shell">
+                      <video controls muted loop playsinline preload="metadata">
+                        <source src="static/results/05_comparison_ood_scene/bottom_left_WORLDplay.mp4" type="video/mp4">
+                      </video>
+                    </div>
+                    <p class="qual-results__method-name has-text-centered">Worldplay</p>
+                  </div>
+
+                  <div class="qual-results__comparison-item is-ours">
+                    <div class="qual-results__video-shell">
+                      <video controls muted loop playsinline preload="metadata">
+                        <source src="static/results/05_comparison_ood_scene/bottom_right_OURS.mp4" type="video/mp4">
+                      </video>
+                    </div>
+                    <p class="qual-results__method-name has-text-centered">Ours</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">BibTeX</h2>
+          <div class="content citation-block">
+            <pre><code>@article{guo2026memorize,
+  title={Memorize When Needed: Decoupled Memory Control for Spatially Consistent Long-Horizon Video Generation},
+  author={Guo, Yanjun and Zhang, Zhengqiang and Wang, Pengfei and Liang, Xinyue and Ma, Zhiyuan and Zhang, Lei},
+  journal={arXiv preprint arXiv:2604.18215},
+  year={2026}
+}</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section hero is-light">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Contact</h2>
+          <div class="content">
+            <p>Please send emails to <a href="mailto:yanjunn.guo@connect.polyu.hk">yanjunn.guo@connect.polyu.hk</a> if there is any question.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="content">
+            <p>
+              This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a> which was adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
+              This website is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bulma-carousel@4.0.24/dist/js/bulma-carousel.min.js"></script>
+  <script>
+    var OOD_PROMPTS_URL = "static/results/01_ood_results_with_prompt/prompts.json";
+    var PROMPT_FALLBACK_TEXT = "Prompt unavailable.";
+
+    function normalizePromptText(value) {
+      if (typeof value !== "string") {
+        return "";
+      }
+
+      return value.replace(/^Prompt:\s*/i, "").trim();
+    }
+
+    function parsePromptPayload(payload) {
+      var promptMap = {};
+
+      if (Array.isArray(payload)) {
+        payload.forEach(function (item, index) {
+          if (typeof item === "string") {
+            var numberedName = String(index + 1).padStart(2, "0") + ".mp4";
+            promptMap[numberedName] = normalizePromptText(item) || PROMPT_FALLBACK_TEXT;
+            return;
+          }
+
+          if (!item || typeof item !== "object") {
+            return;
+          }
+
+          var filename = item.filename || item.file || item.name;
+          var promptText = normalizePromptText(item.prompt || item.text || item.caption || item.description);
+
+          if (filename && promptText) {
+            promptMap[filename] = promptText;
+          }
+        });
+      } else if (payload && typeof payload === "object") {
+        Object.keys(payload).forEach(function (filename) {
+          var value = payload[filename];
+
+          if (typeof value === "string") {
+            promptMap[filename] = normalizePromptText(value) || PROMPT_FALLBACK_TEXT;
+            return;
+          }
+
+          if (value && typeof value === "object") {
+            var promptText = normalizePromptText(value.prompt || value.text || value.caption || value.description);
+            if (promptText) {
+              promptMap[filename] = promptText;
+            }
+          }
+        });
+      }
+
+      return promptMap;
+    }
+
+    function applyPromptMap(promptMap) {
+      document.querySelectorAll("[data-prompt-filename]").forEach(function (card) {
+        var filename = card.getAttribute("data-prompt-filename");
+        var target = card.querySelector("[data-prompt-text]");
+        var promptText = promptMap[filename] || PROMPT_FALLBACK_TEXT;
+
+        if (target) {
+          target.textContent = promptText;
+        }
+      });
+    }
+
+    function loadOodPrompts() {
+      fetch(OOD_PROMPTS_URL)
+        .then(function (response) {
+          if (!response.ok) {
+            throw new Error("Unable to load prompts.json");
+          }
+
+          return response.json();
+        })
+        .then(function (payload) {
+          applyPromptMap(parsePromptPayload(payload));
+        })
+        .catch(function () {
+          applyPromptMap({});
+        });
+    }
+
+    function updateGallerySliderState(viewport, button) {
+      var arrow = button.querySelector("[data-gallery-arrow]");
+      var maxScrollLeft = Math.max(viewport.scrollWidth - viewport.clientWidth, 0);
+      var isAtEnd = maxScrollLeft > 0 && viewport.scrollLeft >= maxScrollLeft - 4;
+
+      button.classList.toggle("is-disabled", maxScrollLeft <= 4);
+      button.setAttribute("aria-label", isAtEnd ? "Show previous result" : "Show next result");
+
+      if (arrow) {
+        arrow.textContent = isAtEnd ? "‹" : "›";
+      }
+    }
+
+    function initGallerySliders() {
+      document.querySelectorAll("[data-gallery-slider]").forEach(function (card) {
+        var viewport = card.querySelector("[data-gallery-viewport]");
+        var button = card.querySelector("[data-gallery-toggle]");
+
+        if (!viewport || !button) {
+          return;
+        }
+
+        function syncState() {
+          updateGallerySliderState(viewport, button);
+        }
+
+        button.addEventListener("click", function () {
+          var maxScrollLeft = Math.max(viewport.scrollWidth - viewport.clientWidth, 0);
+          var isAtEnd = maxScrollLeft > 0 && viewport.scrollLeft >= maxScrollLeft - 4;
+
+          if (maxScrollLeft <= 4) {
+            return;
+          }
+
+          viewport.scrollTo({
+            left: isAtEnd ? 0 : maxScrollLeft,
+            behavior: "smooth"
+          });
+        });
+
+        viewport.addEventListener("scroll", syncState, { passive: true });
+        window.addEventListener("resize", syncState);
+        syncState();
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      document.querySelectorAll("video").forEach(function (video) {
+        video.autoplay = true;
+        var playPromise = video.play();
+        if (playPromise && typeof playPromise.catch === "function") {
+          playPromise.catch(function () {});
+        }
+      });
+
+      if (document.querySelector("[data-prompt-filename]")) {
+        loadOodPrompts();
+      }
+
+      if (document.querySelector("[data-gallery-slider]")) {
+        initGallerySliders();
+      }
+
+      if (window.bulmaCarousel && document.querySelector("#results-carousel")) {
+        bulmaCarousel.attach("#results-carousel", {
+          slidesToScroll: 1,
+          slidesToShow: 1,
+          loop: true,
+          infinite: true,
+          autoplay: false
+        });
+      }
+    });
+  </script>
+</body>
+</html>

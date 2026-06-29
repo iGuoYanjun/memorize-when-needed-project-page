@@ -1,0 +1,8 @@
+<svg width="1280" height="720" viewBox="0 0 1280 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1280" height="720" rx="28" fill="#F5F8FD"/>
+  <rect x="34" y="34" width="1212" height="652" rx="24" fill="white" stroke="#D8E0EA" stroke-width="4"/>
+  <circle cx="640" cy="330" r="104" fill="#244F9E" fill-opacity="0.12" stroke="#244F9E" stroke-width="6"/>
+  <path d="M614 274L714 330L614 386V274Z" fill="#244F9E"/>
+  <text x="420" y="500" fill="#162033" font-family="Arial, sans-serif" font-size="34" font-weight="700">Anonymous Video Poster Placeholder</text>
+  <text x="342" y="548" fill="#5A6578" font-family="Arial, sans-serif" font-size="26">Use this local poster for HTML5 videos until the final anonymous demo assets are ready.</text>
+</svg>
